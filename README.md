@@ -2,11 +2,20 @@
 
 ![AETERNA HERO](https://via.placeholder.com/1200x400.png?text=AETERNA+INDUSTRIAL+FUTURISM+ACTIVE)
 
+> [!NOTE]
+> **Status**: *High-fidelity "Industrial Futurism" cinematic renders are currently being processed. Placeholders are active until finalized.*
+
 AETERNA is a state-of-the-art **Invisible Web3** ticketing and loyalty protocol. Built for high-end festivals and elite social circles, it eliminates the friction of blockchain while preserving the permanence and prestige of on-chain assets.
 
 ## 🌌 The Vision: Industrial Futurism
 
 AETERNA merges the tactile utility of industrial infrastructure with the ethereal potential of digital evolution. Every "Prestige Pass" is a unique **Metaplex Core** asset that evolves alongside its owner, powered by **Turnkey**'s non-custodial session keys.
+
+### Design Tokens
+
+- **Ghost Matter**: A physics-based material shader using R3F and GLSL for iridescent, semi-transparent textures.
+- **Neon Obsidian**: The core structural aesthetic—dark, reflective, and precision-engineered.
+- **Industrial Pulse**: Animated UI signals indicating secure on-chain synchronizations.
 
 ---
 
@@ -49,27 +58,27 @@ We leverage **Turnkey** to create "Pulse Wallets"—invisible, non-custodial ses
 
 User actions (spending USDC, scanning at events, participating in DeFi) trigger the `grant_xp` and `evolve_soul` instructions.
 
-- **XP Engine**: Tracks activity on-chain.
-- **Metaplex Core Upgrades**: When XP thresholds are met, the backend authority triggers a metadata evolution, physically changing the asset's appearance from "Dormant" to "Active" or "VIP".
+- **XP Engine**: Tracks activity on-chain through the `SoulStats` ledger.
+- **Metaplex Core Upgrades**: When XP thresholds are met, the backend authority triggers a metadata evolution using the MPL-Core `UpdateV1` instruction, physically changing the asset's appearance from "Dormant" to "Active" or "VIP".
 
 ---
 
 ## 🛠️ Technical Integrations
 
-### Metaplex Core (MPL-Core)
+### Metaplex Core (MPL-Core v0.7.0)
 
-- **Plugin System**: Used for efficient attribute management.
-- **Low Compute**: Optimized for high-frequency festival interactions.
+- **Plugin System**: Leveraged for efficient attribute management and state tracking.
+- **Low Compute**: Optimized for high-frequency festival interactions to minimize latency.
 
 ### Turnkey (Pulse Service)
 
-- **Blind Signing Prevention**: All transactions are simulated via Helius/Solana RPC before signing.
-- **Biometric Security**: Users sign transitions using FaceID/TouchID via Passkeys.
+- **Transaction Simulation**: Every payload is simulated via Helius or Solana RPC to detect drainers or unauthorized program interactions *before* signing.
+- **Sub-Organization Isolation**: Every user occupies a distinct security boundary within the Turnkey HSM.
 
-### React Three Fiber (Ghost Matter Frontend)
+### React Three Fiber (Spatial Frontend)
 
-- **Spatial UX**: A unified, cinematic 3D environment for interacting with the "Prestige Pass".
-- **SOTA Materials**: Implementation of "Ghost Matter" shaders for high-end visual feedback.
+- **R3F + Cannon.js**: Physics-based interactions with digital assets.
+- **Dynamic HUD**: Cinematic overlays that react to on-chain XP gains and wealth-tier shifts.
 
 ---
 
@@ -77,28 +86,36 @@ User actions (spending USDC, scanning at events, participating in DeFi) trigger 
 
 ### Prerequisites
 
-- Solana CLI & Anchor 0.29.0
-- Node.js v20+
-- Turnkey API Keys
+- **Anchor CLI**: `0.29.0`
+- **Solana CLI**: `1.18.x`
+- **Node.js**: `v20.x`
+- **Keys**: Turnkey API Key & Organization ID.
 
-### Installation
+### Installation & Launch
 
-```bash
-# Clone the repository
-git clone https://github.com/your-repo/aeterna.git
+1. **Clone & Install**
 
-# Install dependencies
-npm install
+   ```bash
+   git clone https://github.com/your-repo/aeterna.git
+   cd aeterna && npm install
+   ```
 
-# Build the Anchor program
-anchor build
+2. **Deploy Program**
 
-# Start the Pulse Service
-cd apps/pulse-service && npm run dev
+   ```bash
+   cd programs/aeterna
+   anchor build && anchor deploy
+   ```
 
-# Start the Frontend
-cd frontend && npm run dev
-```
+3. **Initialize Services**
+
+   ```bash
+   # Terminal 1: Pulse Service
+   cd pulse-service && npm run dev
+
+   # Terminal 2: Frontend
+   cd frontend && npm run dev
+   ```
 
 ---
 
