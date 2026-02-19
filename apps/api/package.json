@@ -1,0 +1,30 @@
+{
+    "name": "aeterna-pulse-service",
+    "version": "1.0.0",
+    "description": "Turnkey-integrated wallet service for AETERNA",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "ts-node src/index.ts"
+    },
+    "dependencies": {
+        "@solana/web3.js": "^1.91.0",
+        "@turnkey/api-key-stamper": "^0.3.1",
+        "@turnkey/http": "^2.5.1",
+        "body-parser": "^1.20.2",
+        "bs58": "^5.0.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "helius-sdk": "^2.1.0",
+        "@aeterna/types": "file:../../packages/types"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.12.7",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5"
+    }
+}
