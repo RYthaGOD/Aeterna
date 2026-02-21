@@ -3,50 +3,41 @@ node_modules/
 .pnp
 .pnp.js
 
-# Testing
-/coverage
+# Build and Temp folders
+.next/
+out/
+build/
+dist/
+target/
+.cache/
 
-# Next.js
-/.next/
-/out/
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Production
-/build
-/dist
-
-# Misc
-.DS_Store
-*.pem
-
-# Debug
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+AUDIT_MASTER.md
+*.log
 
-# Local env files
-.env*.local
-.env
-.env.development
-.env.test
-.env.production
-
-# Vercel
-.vercel
-
-# Solana / Anchor
-target/
-.anchor/
-test-ledger/
-
-# IDEs
+# IDEs and OS
+.DS_Store
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Puppeteer
-.puppeteer_tmp_*
-
-# Aeterna Secrets
+# Anchor/Solana
+test-ledger/
+.anchor/
 backend-authority.json
 gen_keypair.mjs
+
+# Puppeteer
+.puppeteer_tmp_*

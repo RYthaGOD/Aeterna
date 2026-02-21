@@ -284,7 +284,15 @@ app.post("/api/simulate-swap", async (req, res) => {
         // 1. Record Swap in Bolt (Updates Trading Volume Component)
         const result = await boltClient.recordSwap(userSoul, volumeUsd);
 
-        // 2. Check for Evolution (Wealth Tier Upgrade)
+        // 2. Grant XP via Gamification Program (Aeterna)
+        // In a real implementation this would invoke programs/aeterna/src/instructions/grant_xp.rs
+        // We use the bolt client as a temporary broker to proxy the interaction
+        const xpAmount = Math.floor(volumeUsd * 0.5); // 1 XP per $2 swapped
+        const xpResult = await boltClient.addXP(userSoul, xpAmount);
+
+        console.log(`[Pulse] Granted ${xpAmount} Gamification XP for Swap.`);
+
+        // 3. Check for Evolution (Wealth Tier Upgrade)
         if (result.newTrait) {
             console.log(`[Pulse] Soul ${userSoul} Earned Trait: ${result.newTrait}!`);
         }

@@ -9,6 +9,10 @@ import {
 import * as anchor from "@coral-xyz/anchor";
 import { Buffer } from "buffer";
 
+// Ensure connection is available for simulation
+const RPC_URL = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
+const connection = new Connection(RPC_URL, "confirmed");
+
 interface CreatePulseWalletResponse {
     subOrganizationId: string;
     walletAddress: string;
@@ -106,8 +110,26 @@ export class WalletManager {
             const isValid = await this.verifyTransaction(unsignedTx);
             if (!isValid) return { success: false, error: "Unauthorized Program Interaction" };
 
-            // Mock check for abnormal SOL transfers
-            // In real world, we'd inspect simulation.value.logs for 'Transfer' and compare balances
+            // Real Simulation via Solana RPC
+            const txBuffer = Buffer.from(unsignedTx, "hex");
+            const tx = VersionedTransaction.deserialize(txBuffer);
+
+            const simulationResult = await connection.simulateTransaction(tx, {
+                replaceRecentBlockhash: true,
+                commitment: "confirmed"
+            });
+
+            if (simulationResult.value.err) {
+                console.error("Simulation Error Details:", simulationResult.value.logs);
+                return { success: false, error: "On-Chain Simulation Failed: " + JSON.stringify(simulationResult.value.err) };
+            }
+
+            // Inspect Logs for malicious transfers (Drains)
+            const logs = simulationResult.value.logs || [];
+            if (logs.some(log => log.includes("insufficient funds") || log.includes("Custom error"))) {
+                return { success: false, error: "Simulation detected malicious contract abort." };
+            }
+
             console.log("✅ Simulation Passed: No critical risks detected.");
             return { success: true };
         } catch (e) {
@@ -169,6 +191,6 @@ export class WalletManager {
         }
 
         console.log(`Stats Updated: E=${energyDelta}, H=${happinessDelta}, XP=${xpDelta}`);
-        return "tx_signature_placeholder";
+        throw new Error("feedPet requires a signed transaction payload broadcast to Devnet. Use BoltClient.addXP for direct authority interaction.");
     }
 }

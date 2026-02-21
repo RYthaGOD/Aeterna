@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use bolt_lang::*;
 use crate::components::SoulTraits;
 
-declare_id!("8X5X7X...PLACEHOLDER...Z"); // Will be replaced by actual key
+declare_id!("WorLd11111111111111111111111111111111111111"); // Devnet valid base58 placeholder
 
 #[program]
 pub mod world {
@@ -40,6 +40,11 @@ pub mod world {
             soul.xp = soul.xp.checked_add(xp).unwrap_or(soul.xp);
         }
 
+        // 4. Update Trading Volume
+        if let Some(vol) = args.add_trading_volume {
+            soul.trading_volume = soul.trading_volume.checked_add(vol).unwrap_or(soul.trading_volume);
+        }
+
         soul.last_interaction = Clock::get()?.unix_timestamp;
 
         Ok(())
@@ -49,7 +54,7 @@ pub mod world {
 #[derive(Accounts)]
 pub struct UpdateSoul<'info> {
     #[account(mut, has_one = authority)]
-    pub soul: Account<'info, SoulTraits>, // The Bolt Component PDA
+    pub soul: Account<'info, SoulTraits>, // The Bolt Component PDA (legacy Name, but contains stats)
     pub authority: Signer<'info>, // The Pulse Service (Backend Authority)
 }
 
@@ -58,6 +63,7 @@ pub struct UpdateSoulArgs {
     pub energy: Option<u8>,
     pub happiness: Option<u8>,
     pub xp: Option<u64>,
+    pub add_trading_volume: Option<u64>,
 }
 
 #[derive(Accounts)]

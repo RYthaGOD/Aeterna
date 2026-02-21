@@ -1,5 +1,6 @@
 import { turnkeyClient, ORG_ID } from "./turnkey_client";
 import { Buffer } from "buffer";
+import fetch from "node-fetch";
 import {
     Connection,
     Keypair,
@@ -14,6 +15,15 @@ interface CreatePulseWalletResponse {
 }
 
 export class WalletManager {
+    connection: Connection;
+
+    constructor() {
+        const RPC_URL = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
+        this.connection = new Connection(RPC_URL, {
+            commitment: "confirmed",
+            fetch: fetch as any
+        });
+    }
     /**
      * Creates a new User Sub-Organization and a Solana private key.
      * This is the "Pulse Wallet" initialization.
@@ -116,6 +126,43 @@ export class WalletManager {
     }
 
     /**
+     * Simulates a transaction using Helius/RPC.
+     */
+    async simulateTransaction(unsignedTx: string): Promise<{ success: boolean; error?: string }> {
+        console.log("🛡️ Simulation Sentinel: Inspecting transaction...");
+
+        try {
+            const isValid = await this.verifyTransaction(unsignedTx);
+            if (!isValid) return { success: false, error: "Unauthorized Program Interaction" };
+
+            // Real Simulation via Solana RPC
+            const txBuffer = Buffer.from(unsignedTx, "hex");
+            const tx = VersionedTransaction.deserialize(txBuffer);
+
+            const simulationResult = await this.connection.simulateTransaction(tx, {
+                replaceRecentBlockhash: true,
+                commitment: "confirmed"
+            });
+
+            if (simulationResult.value.err) {
+                console.error("Simulation Error Details:", simulationResult.value.logs);
+                return { success: false, error: "On-Chain Simulation Failed: " + JSON.stringify(simulationResult.value.err) };
+            }
+
+            // Inspect Logs for malicious transfers (Drains)
+            const logs = simulationResult.value.logs || [];
+            if (logs.some(log => log.includes("insufficient funds") || log.includes("Custom error"))) {
+                return { success: false, error: "Simulation detected malicious contract abort." };
+            }
+
+            console.log("✅ Simulation Passed: No critical risks detected.");
+            return { success: true };
+        } catch (e) {
+            return { success: false, error: "Simulation Failed: " + (e as Error).message };
+        }
+    }
+
+    /**
      * Sign a Solana transaction using the Pulse Wallet via Turnkey.
      * Uses the correct Turnkey v2 activity type SIGN_TRANSACTION_V2.
      */
@@ -127,6 +174,11 @@ export class WalletManager {
         const isValid = await this.verifyTransaction(unsignedTx);
         if (!isValid) {
             throw new Error("Security Alert: Transaction blocked — unauthorized program interaction.");
+        }
+
+        const simulation = await this.simulateTransaction(unsignedTx);
+        if (!simulation.success) {
+            throw new Error(`🛑 SECURITY BLOCK: ${simulation.error}`);
         }
 
         const signResult = await turnkeyClient.signTransaction({

@@ -1,20 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
 import RebornEngine from "@/components/RebornEngine";
 import MirrorSoul from "@/components/MirrorSoul";
 import CinematicHUD from "@/components/CinematicHUD";
 
 export default function Home() {
-  const [wallet, setWallet] = useState<PublicKey | null>(null);
+  const { publicKey, connect, disconnect, connected } = useWallet();
   const [xp, setXp] = useState<number>(0);
   const [wealthTier, setWealthTier] = useState<number>(0);
 
-  const connectMock = () => {
-    // Cinematic connection simulation
-    const mockUser = new PublicKey("AETERNAUser1111111111111111111111111111111111");
-    setWallet(mockUser);
+  // Sync wallet adapter state to local state (or just pass `publicKey` down directly)
+  const wallet = publicKey;
+
+  const handleConnect = async () => {
+    if (connected) {
+      await disconnect();
+    } else {
+      await connect().catch(console.error);
+    }
   };
 
   const handleScan = () => {
@@ -41,7 +47,7 @@ export default function Home() {
         wallet={wallet}
         xp={xp}
         wealthTier={wealthTier}
-        onConnect={connectMock}
+        onConnect={handleConnect}
         onScan={handleScan}
         onSwap={handleSwap}
       />

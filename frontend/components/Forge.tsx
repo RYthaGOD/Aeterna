@@ -8,6 +8,7 @@ import { SoulDNA, generateSoulMaterial } from "./forge/SoulMaterials";
 import { SpiritGeometry } from "./forge/SpiritGeometry";
 import { useFrame } from "@react-three/fiber";
 import Effects from "./Effects"; // POST-PROCESSING LAYER
+import { useWallet } from "@solana/wallet-adapter-react";
 
 function Satellites({ count, color }: { count: number, color: string }) {
     const groupRef = useRef<THREE.Group>(null);
@@ -89,9 +90,11 @@ function AvatarModel({ dna, mat }: { dna: SoulDNA, mat: any }) {
 
 export default function Forge({ xpLevel = 0, wealthTier = 0, dna: externalDna }: { xpLevel?: number, wealthTier?: number, dna?: SoulDNA }) {
 
-    const mockAddress = "7xKXtg2M87XZkX9pP0...MockAddress";
+    const { publicKey } = useWallet();
+    const address = publicKey ? publicKey.toString() : "AETERNA_UNCONNECTED_SOUL";
+
     const [internalDna] = useState<SoulDNA>({
-        walletAddress: mockAddress,
+        walletAddress: address,
         walletAgeDays: xpLevel > 10 ? 400 : 10,
         wealthUsd: wealthTier > 0 ? 50000 : 0,
         txCount: 12,
@@ -100,7 +103,7 @@ export default function Forge({ xpLevel = 0, wealthTier = 0, dna: externalDna }:
         burnCount: 1
     });
 
-    const dna = { ...internalDna, ...externalDna };
+    const dna = { ...internalDna, ...externalDna, walletAddress: address };
     const mat = generateSoulMaterial(dna);
 
     return (

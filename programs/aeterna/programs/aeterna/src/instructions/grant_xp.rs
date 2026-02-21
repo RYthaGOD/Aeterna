@@ -29,6 +29,8 @@ pub struct GrantXp<'info> {
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct GrantXpArgs {
     pub xp_amount: u64,
+    pub add_trading_volume: Option<u64>,
+    pub quests_completed: Option<u32>,
 }
 
 pub fn handler(ctx: Context<GrantXp>, args: GrantXpArgs) -> Result<()> {
@@ -42,6 +44,17 @@ pub fn handler(ctx: Context<GrantXp>, args: GrantXpArgs) -> Result<()> {
     );
 
     soul_stats.xp = soul_stats.xp.saturating_add(args.xp_amount);
+    
+    // Add DeFi tracking if passed
+    if let Some(vol) = args.add_trading_volume {
+        soul_stats.trading_volume = soul_stats.trading_volume.saturating_add(vol);
+        msg!("Trading Volume update: +{} -> {}", vol, soul_stats.trading_volume);
+    }
+    
+    // Increment quest counter if it's a scan action
+    if let Some(quests) = args.quests_completed {
+        soul_stats.quests_completed = soul_stats.quests_completed.saturating_add(quests);
+    }
 
     Ok(())
 }
