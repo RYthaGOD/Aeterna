@@ -61,17 +61,12 @@ function AuraSphere({ color }: { color: string }) {
     );
 }
 
-function AvatarModel({ dna, mat }: { dna: SoulDNA, mat: any }) {
-    let archetype = "SPARK";
-    if (dna.walletAgeDays && dna.walletAgeDays > 365) archetype = "MONOLITH";
-    else if (dna.tokenCount && dna.tokenCount > 5) archetype = "CURATOR";
-    else if (dna.wealthUsd && dna.wealthUsd > 10000) archetype = "CONSTRUCT";
-
+function AvatarModel({ dna, mat, stage }: { dna: SoulDNA, mat: any, stage: number }) {
     return (
         <group position={[0, -0.5, 0]}>
             <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
                 {/* CORE ARTEFACT */}
-                <SpiritGeometry mat={mat} dna={dna} archetype={archetype} />
+                <SpiritGeometry mat={mat} dna={dna} stage={stage} />
 
                 {/* INNER GLOW */}
                 <pointLight color={mat.core.color} intensity={5} distance={3} decay={2} />
@@ -124,7 +119,7 @@ export default function Forge({ xpLevel = 0, wealthTier = 0, dna: externalDna }:
                     {/* STARS BACKGROUND - Adds depth behind the bloom */}
                     <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
 
-                    <AvatarModel dna={dna} mat={mat} />
+                    <AvatarModel dna={dna} mat={mat} stage={wealthTier} />
 
                     <ContactShadows position={[0, -2, 0]} opacity={0.5} scale={10} blur={2.5} far={10} color="#000000" />
 
