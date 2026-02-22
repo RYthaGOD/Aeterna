@@ -13,6 +13,8 @@ target/
 
 # Environment Variables
 .env
+.env.*
+*.env
 .env.local
 .env.development.local
 .env.test.local
@@ -41,3 +43,11 @@ gen_keypair.mjs
 
 # Puppeteer
 .puppeteer_tmp_*
+
+# Security & Secrets
+*.json.bak
+*keypair*.json
+*_keypair.json
+id.json
+turnkey_*.json
+turnkey*.txt
