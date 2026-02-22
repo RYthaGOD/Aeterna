@@ -1,4 +1,4 @@
-import { SoulDNA } from '../components/Forge';
+import { SoulDNA } from '../components/forge/SoulMaterials';
 
 /**
  * Standard Metaplex Attribute Interface

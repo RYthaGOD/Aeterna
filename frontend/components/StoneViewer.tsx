@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, MeshTransmissionMaterial, Float, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import GhostMatterMaterialImpl from "./GhostMatterMaterial";

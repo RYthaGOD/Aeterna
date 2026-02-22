@@ -31,16 +31,7 @@ export default function AvatarDisplay({ assetAddress }: AvatarDisplayProps) {
                 const fetchedAsset = await fetchAssetV1(umi, publicKey(assetAddress));
                 setAsset(fetchedAsset);
 
-                // Fetch off-chain JSON (Image)
-                if (fetchedAsset.uri) {
-                    try {
-                        const response = await fetch(fetchedAsset.uri);
-                        const json = await response.json();
-                        setImageUri(json.image);
-                    } catch (err) {
-                        console.error("Failed to fetch metadata URI", err);
-                    }
-                }
+                // Off-chain JSON fetch removed: Avatar is fully 3D (WebGL)
 
             } catch (err: any) {
                 console.error("Error fetching avatar:", err);
@@ -58,15 +49,15 @@ export default function AvatarDisplay({ assetAddress }: AvatarDisplayProps) {
     if (!asset) return null;
 
     // Parse Attributes via Bridge
-    const attributesPlugin = asset.plugins?.find(p => p.type === 'Attributes');
+    const attributesPlugin = (asset as any).plugins?.find((p: any) => p.type === 'Attributes');
     const attributeList = attributesPlugin?.data.attributeList || [];
 
     // CONVERT METAPLEX DATA -> VISUAL DNA
     const soulDNA = bridgeSoulDNA(attributeList);
 
     // Derived Stats for UI
-    const currentXP = Number(attributeList.find(a => a.key === 'XP')?.value || 0);
-    const currentLevel = Number(attributeList.find(a => a.key === 'Level')?.value || 1);
+    const currentXP = Number(attributeList.find((a: any) => a.key === 'XP')?.value || 0);
+    const currentLevel = Number(attributeList.find((a: any) => a.key === 'Level')?.value || 1);
     const nextLevelXP = currentLevel * 1000;
     const prevLevelXP = (currentLevel - 1) * 1000;
     const progressPercent = Math.min(Math.max(((currentXP - prevLevelXP) / (nextLevelXP - prevLevelXP)) * 100, 0), 100);
@@ -85,7 +76,7 @@ export default function AvatarDisplay({ assetAddress }: AvatarDisplayProps) {
                     <h2 className="text-3xl font-bold text-white tracking-tight mb-1">{asset.name}</h2>
                     <div className="inline-flex items-center px-2 py-1 rounded-md bg-white/10 border border-white/10 backdrop-blur-md">
                         <span className="text-indigo-300 text-xs font-mono uppercase tracking-wider">
-                            {attributeList.find(a => a.key === 'Title')?.value || 'Wanderer'}
+                            {attributeList.find((a: any) => a.key === 'Title')?.value || 'Wanderer'}
                         </span>
                     </div>
                 </div>

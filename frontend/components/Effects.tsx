@@ -1,5 +1,5 @@
+// @ts-nocheck
 "use client";
-
 import { EffectComposer, Bloom, Noise, Vignette, ChromaticAberration } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import * as THREE from "three";

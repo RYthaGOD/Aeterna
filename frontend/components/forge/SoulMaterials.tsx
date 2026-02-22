@@ -296,7 +296,7 @@ export const generateSoulMaterial = (dna: SoulDNA) => {
     }
 
     // ACCENT (Wealth)
-    let accentColorObj = new THREE.Color("#64748b");
+    const accentColorObj = new THREE.Color("#64748b");
     if (wealth > 5000) {
         accentColorObj.set("#FFD700"); // Gold
         metalness = 1.0;
@@ -310,7 +310,7 @@ export const generateSoulMaterial = (dna: SoulDNA) => {
     accentColorObj.offsetHSL(traits.hueShift / 360, 0, 0);
 
     // AURA
-    let auraColorObj = new THREE.Color("#4f46e5");
+    const auraColorObj = new THREE.Color("#4f46e5");
     let auraSpeed = 1.0;
     if (activity > 100) {
         auraColorObj.set("#ef4444"); // Red
