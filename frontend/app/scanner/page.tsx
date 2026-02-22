@@ -9,9 +9,11 @@ import { PublicKey } from "@solana/web3.js";
 import { PROGRAM_ID } from "@/lib/constants";
 import { getProgram } from "@/lib/aeterna-program";
 
-// ── QR Scanner ────────────────────────────────────────────────────────────────
 // react-qr-reader reads a camera feed and calls onResult when a QR is decoded.
 // The QR code should contain the user's AETERNA Pass public key.
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { fetchAsset } from "@metaplex-foundation/mpl-core";
+import { publicKey as umiPublicKey } from "@metaplex-foundation/umi";
 import dynamic from "next/dynamic";
 const QrReader = dynamic(() => import("react-qr-reader").then(m => m.QrReader), { ssr: false });
 
@@ -56,6 +58,11 @@ export default function ScannerPage() {
             // Validate it's a real public key
             new PublicKey(assetPubkey);
 
+            // Fetch the asset owner via Umi to satisfy the smart contract constraints
+            const umi = createUmi(connection.rpcEndpoint);
+            const coreAsset = await fetchAsset(umi, umiPublicKey(assetPubkey));
+            const recipientPubkey = new PublicKey(coreAsset.owner);
+
             const program = getProgram(connection, wallet);
 
             // Derive PDAs needed for complete_quest
@@ -93,6 +100,7 @@ export default function ScannerPage() {
                     quest: questPda,
                     event: eventPda,
                     asset: new PublicKey(assetPubkey),
+                    recipient: recipientPubkey,
                     soulStats: soulStatsPda,
                     completionRecord: completionRecordPda,
                     mplCoreProgram: new PublicKey("CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d"),

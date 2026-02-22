@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::state::pulse_link::PulseLink;
+use crate::state::*;
 use crate::AeternaError;
 
 #[derive(Accounts)]
@@ -11,6 +11,7 @@ pub struct ManagePulse<'info> {
     /// CHECK: We verify ownership via Core CPI or just assume signature authority if needed.
     /// For now, we trust the owner is signing for *their* asset.
     /// In a real app, we should verify `asset.owner == owner.key()`.
+    /// CHECK: Validated by BaseAssetV1 manual deserialization
     #[account()]
     pub asset: UncheckedAccount<'info>,
 
@@ -45,14 +46,14 @@ pub fn handler(ctx: Context<ManagePulse>, args: PulseArgs) -> Result<()> {
     use mpl_core::accounts::BaseAssetV1;
     // Attempt to deserialize headers to check owner
     let asset_data = ctx.accounts.asset.try_borrow_data()?;
-    let asset_account = BaseAssetV1::try_deserialize(&mut asset_data.as_ref())?;
+    let asset_account = BaseAssetV1::from_bytes(&asset_data)?;
     
     require!(asset_account.owner == ctx.accounts.owner.key(), AeternaError::Unauthorized);
 
     let pulse_link = &mut ctx.accounts.pulse_link;
     pulse_link.asset = ctx.accounts.asset.key();
     pulse_link.pulse_wallet = args.pulse_wallet;
-    pulse_link.bump = *ctx.bumps.get("pulse_link").unwrap();
+    pulse_link.bump = ctx.bumps.pulse_link;
 
     msg!("Pulse Link Established.");
     Ok(())

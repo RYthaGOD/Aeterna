@@ -5,7 +5,7 @@ pub use instructions::*;
 pub mod state;
 pub use state::*;
 
-declare_id!("AEtErna111111111111111111111111111111111111");
+declare_id!("E3aVLq7oT4BFPjHRXaZmYupDJ9EZTG8At8oafLKzPMBG");
 
 #[program]
 pub mod aeterna {

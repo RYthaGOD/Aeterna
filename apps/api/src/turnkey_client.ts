@@ -33,7 +33,7 @@ export const turnkeyClient = new TurnkeyClient(
 export async function checkConnection() {
     try {
         const whoami = await turnkeyClient.getWhoami({
-            organizationId: ORG_ID,
+            organizationId: ORG_ID as string,
         });
         console.log("Turnkey Connection Verified:", whoami.organizationId);
         return true;

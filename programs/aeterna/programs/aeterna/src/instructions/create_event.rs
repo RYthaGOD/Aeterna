@@ -24,7 +24,7 @@ pub fn handler(ctx: Context<CreateEvent>, name: String) -> Result<()> {
     event.authority = ctx.accounts.authority.key();
     event.name = name;
     event.active = true;
-    event.bump = *ctx.bumps.get("event").unwrap();
+    event.bump = ctx.bumps.event;
 
     msg!("Event Created: {}", event.name);
     Ok(())

@@ -3,7 +3,7 @@ export const PULSE_API_URL = process.env.NEXT_PUBLIC_PULSE_API_URL || "http://lo
 
 // ── On-chain Program IDs ──────────────────────────────────────────────────────
 // Update PROGRAM_ID after `anchor deploy --provider.cluster devnet`
-export const PROGRAM_ID = process.env.NEXT_PUBLIC_PROGRAM_ID || "AEtErna111111111111111111111111111111111111";
+export const PROGRAM_ID = process.env.NEXT_PUBLIC_PROGRAM_ID || "E3aVLq7oT4BFPjHRXaZmYupDJ9EZTG8At8oafLKzPMBG";
 export const MPL_CORE_PROGRAM_ID = "CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d";
 
 // ── Backend Authority ─────────────────────────────────────────────────────────

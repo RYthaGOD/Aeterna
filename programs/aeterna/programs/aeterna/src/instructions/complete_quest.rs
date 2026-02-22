@@ -5,7 +5,7 @@ use crate::state::soul_stats::SoulStats;
 use crate::state::completion_record::CompletionRecord;
 use mpl_core::{
     ID as CORE_PROGRAM_ID,
-    instructions::{UpdateV1Cpi, UpdateV1InstructionArgs},
+    instructions::{UpdatePluginV1Cpi, UpdatePluginV1CpiAccounts, UpdatePluginV1InstructionArgs},
     types::{Attribute, Plugin, Attributes},
 };
 
@@ -69,6 +69,7 @@ pub struct CompleteQuest<'info> {
     pub completion_record: Account<'info, CompletionRecord>,
 
     /// The Metaplex Core Program
+    /// CHECK: Validated via address constraint against CORE_PROGRAM_ID
     #[account(address = CORE_PROGRAM_ID)]
     pub mpl_core_program: UncheckedAccount<'info>,
 
@@ -107,7 +108,7 @@ pub fn handler(ctx: Context<CompleteQuest>) -> Result<()> {
     completion_record.quest = quest.key();
     completion_record.asset = ctx.accounts.asset.key();
     completion_record.completed_at = Clock::get()?.unix_timestamp;
-    completion_record.bump = *ctx.bumps.get("completion_record").unwrap();
+    completion_record.bump = ctx.bumps.completion_record;
 
     // Update Metaplex Core attributes so indexers (Tensor, ME) see the new XP
     let updated_attributes = vec![
@@ -125,23 +126,20 @@ pub fn handler(ctx: Context<CompleteQuest>) -> Result<()> {
         },
     ];
 
-    UpdateV1Cpi::new(
+    UpdatePluginV1Cpi::new(
         &ctx.accounts.mpl_core_program,
-        mpl_core::accounts::UpdateV1 {
+        UpdatePluginV1CpiAccounts {
             asset: &ctx.accounts.asset,
-            authority: Some(&ctx.accounts.authority),
-            payer: Some(&ctx.accounts.payer),
-            system_program: Some(&ctx.accounts.system_program),
-            log_wrapper: None,
             collection: None,
+            authority: Some(&ctx.accounts.authority),
+            payer: &ctx.accounts.payer,
+            system_program: &ctx.accounts.system_program,
+            log_wrapper: None,
         },
-        UpdateV1InstructionArgs {
-            new_uri: None,
-            new_name: None,
-            new_update_authority: None,
-            new_plugins: Some(vec![Plugin::Attributes(Attributes {
+        UpdatePluginV1InstructionArgs {
+            plugin: Plugin::Attributes(Attributes {
                 attribute_list: updated_attributes,
-            })]),
+            }),
         }
     ).invoke()?;
 

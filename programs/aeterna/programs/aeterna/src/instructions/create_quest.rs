@@ -32,7 +32,7 @@ pub fn handler(ctx: Context<CreateQuest>, name: String, xp_reward: u64) -> Resul
     quest.event = ctx.accounts.event.key();
     quest.name = name;
     quest.xp_reward = xp_reward;
-    quest.bump = *ctx.bumps.get("quest").unwrap();
+    quest.bump = ctx.bumps.quest;
 
     msg!("Quest Created: {} ({} XP)", quest.name, quest.xp_reward);
     Ok(())

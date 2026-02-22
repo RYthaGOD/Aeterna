@@ -10,6 +10,8 @@
     },
     "dependencies": {
         "@aeterna/types": "file:../../packages/types",
+        "@coral-xyz/anchor": "^0.32.1",
+        "@metaplex-foundation/mpl-core": "^1.7.0",
         "@solana/web3.js": "^1.91.0",
         "@turnkey/api-key-stamper": "^0.3.1",
         "@turnkey/http": "^2.5.1",
@@ -19,7 +21,8 @@
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "helius-sdk": "^2.1.0",
-        "node-fetch": "^3.3.2"
+        "node-fetch": "^3.3.2",
+        "tweetnacl": "^1.0.3"
     },
     "devDependencies": {
         "@types/cors": "^2.8.17",

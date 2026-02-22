@@ -13,7 +13,7 @@ export class BoltClient {
 
         // Use environment variables or fallback to known devnet addresses
         this.worldProgramId = new PublicKey(process.env.WORLD_PROGRAM_ID || "WorLd11111111111111111111111111111111111111");
-        this.aeternaProgramId = new PublicKey(process.env.AETERNA_PROGRAM_ID || "AEtErna111111111111111111111111111111111111");
+        this.aeternaProgramId = new PublicKey(process.env.AETERNA_PROGRAM_ID || "E3aVLq7oT4BFPjHRXaZmYupDJ9EZTG8At8oafLKzPMBG");
     }
 
     /**
@@ -43,18 +43,31 @@ export class BoltClient {
     async addXP(userSoul: string, amount: number): Promise<{ signature: string, newLevel?: number }> {
         console.log(`[Bolt] Transmitting +${amount} XP to Soul ${userSoul} on Devnet...`);
 
-        // We construct the manual instruction buffer for `grant_xp`
-        // Anchor instruction discriminator for `grant_xp` would normally be used here.
-        // For the sake of this implementation, we will build a generic instruction targeting the Aeterna program.
+        // Grant XP uses discriminator `df9319fc5bed7cd5`
+        // Memory Layout:
+        // [0..8] Discriminator
+        // [8..16] xp_amount (u64)
+        // [16] add_trading_volume Option flag (0 = None)
+        // [17] quests_completed Option flag (0 = None)
 
-        const data = Buffer.alloc(16);
-        data.writeBigUInt64LE(BigInt(amount), 0); // xp_amount
+        const data = Buffer.alloc(8 + 8 + 1 + 1);
+        Buffer.from("df9319fc5bed7cd5", "hex").copy(data, 0);
+        data.writeBigUInt64LE(BigInt(amount), 8);
+        data.writeUInt8(0, 16);
+        data.writeUInt8(0, 17);
+
+        const SystemProgram = new PublicKey("11111111111111111111111111111111");
+        const [soulStatsPda] = PublicKey.findProgramAddressSync(
+            [Buffer.from("soul_stats"), new PublicKey(userSoul).toBuffer()],
+            this.aeternaProgramId
+        );
 
         const ix = new TransactionInstruction({
             programId: this.aeternaProgramId,
             keys: [
-                { pubkey: new PublicKey(userSoul), isSigner: false, isWritable: true },
-                { pubkey: this.authority.publicKey, isSigner: true, isWritable: true }
+                { pubkey: this.authority.publicKey, isSigner: true, isWritable: true },
+                { pubkey: soulStatsPda, isSigner: false, isWritable: true },
+                { pubkey: SystemProgram, isSigner: false, isWritable: false }
             ],
             data
         });
@@ -71,16 +84,21 @@ export class BoltClient {
     async recordSwap(userSoul: string, volumeUsd: number): Promise<{ signature: string, newTrait?: string }> {
         console.log(`[Bolt] Recording Swap $${volumeUsd} for Soul ${userSoul} on Devnet...`);
 
-        // Construct raw instruction to the `world` program's `update_soul`
-        const data = Buffer.alloc(16);
-        // Assuming custom serialization where `trading_volume` is parsed
-        data.writeBigUInt64LE(BigInt(volumeUsd), 0);
+        // Update Soul uses discriminator `c31371ab5aabd39a`
+        // Layout: Discriminator (8) + Options: energy (1), happiness (1), xp (1), add_trading_volume (1) + val (8)
+        const data = Buffer.alloc(20);
+        Buffer.from("c31371ab5aabd39a", "hex").copy(data, 0);
+        data.writeUInt8(0, 8); // Option<u8> energy = None
+        data.writeUInt8(0, 9); // Option<u8> happiness = None
+        data.writeUInt8(0, 10); // Option<u64> xp = None
+        data.writeUInt8(1, 11); // Option<u64> add_trading_volume = Some()
+        data.writeBigUInt64LE(BigInt(volumeUsd), 12);
 
         const ix = new TransactionInstruction({
             programId: this.worldProgramId,
             keys: [
                 { pubkey: new PublicKey(userSoul), isSigner: false, isWritable: true },
-                { pubkey: this.authority.publicKey, isSigner: true, isWritable: true }
+                { pubkey: this.authority.publicKey, isSigner: true, isWritable: false }
             ],
             data
         });

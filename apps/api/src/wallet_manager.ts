@@ -18,7 +18,7 @@ export class WalletManager {
     connection: Connection;
 
     constructor() {
-        const RPC_URL = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
+        const RPC_URL: string = process.env.SOLANA_RPC_URL || "https://api.devnet.solana.com";
         this.connection = new Connection(RPC_URL, {
             commitment: "confirmed",
             fetch: fetch as any
@@ -35,7 +35,7 @@ export class WalletManager {
         // ── 1. Create Sub-Organization ──────────────────────────────────────
         const subOrgName = `AETERNA Pulse - ${userEmail}`;
         const subOrgResult = await turnkeyClient.createSubOrganization({
-            organizationId: ORG_ID,
+            organizationId: ORG_ID as string,
             parameters: {
                 subOrganizationName: subOrgName,
                 rootUsers: [
@@ -104,7 +104,7 @@ export class WalletManager {
             const accountKeys = message.staticAccountKeys;
 
             const ALLOWED_PROGRAMS = [
-                "AEtErna111111111111111111111111111111111111", // AETERNA Protocol
+                "E3aVLq7oT4BFPjHRXaZmYupDJ9EZTG8At8oafLKzPMBG", // AETERNA Protocol
                 "11111111111111111111111111111111",             // System Program
                 "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcQb", // Memo
                 "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",  // Token

@@ -1,0 +1,281 @@
+warning: virtual workspace defaulting to `resolver = "1"` despite one or more workspace members being on edition 2021 which implies `resolver = "2"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+note: for more details see https://doc.rust-lang.org/cargo/reference/resolver.html#resolver-versions
+   Compiling serde_core v1.0.228
+   Compiling rustversion v1.0.22
+   Compiling blake3 v1.5.0
+   Compiling solana-program v1.17.14
+   Compiling solana-sdk-macro v1.17.14
+   Compiling serde v1.0.228
+   Compiling serde_json v1.0.149
+   Compiling serde_bytes v0.11.19
+   Compiling generic-array v0.14.7
+   Compiling toml v0.5.11
+   Compiling bv v0.11.1
+   Compiling bincode v1.3.3
+   Compiling rmp-serde v1.3.0
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling proc-macro-crate v0.1.5
+   Compiling sha2 v0.10.9
+   Compiling borsh-derive v0.9.3
+   Compiling borsh-derive v0.10.4
+   Compiling sha3 v0.10.8
+   Compiling anchor-syn v0.29.0
+   Compiling solana-frozen-abi v1.17.14
+   Compiling anchor-derive-serde v0.29.0
+   Compiling anchor-attribute-error v0.29.0
+   Compiling anchor-attribute-access-control v0.29.0
+   Compiling anchor-derive-accounts v0.29.0
+   Compiling anchor-attribute-program v0.29.0
+   Compiling anchor-attribute-event v0.29.0
+   Compiling anchor-attribute-constant v0.29.0
+   Compiling anchor-attribute-account v0.29.0
+   Compiling borsh v0.10.4
+   Compiling borsh v0.9.3
+Error: Function _ZN112_$LT$solana_program..instruction..InstructionError$u20$as$u20$solana_frozen_abi..abi_example..AbiEnumVisitor$GT$13visit_for_abi17ha5800f82f06dae99E Stack offset of 4608 exceeded max offset of 4096 by 512 bytes, please minimize large stack variables
+   Compiling mpl-core v0.7.2
+   Compiling anchor-lang v0.29.0
+   Compiling aeterna v0.1.0 (/mnt/d/AETERNA/programs/aeterna/programs/aeterna)
+error[E0422]: cannot find struct, variant or union type `UpdateV1` in module `mpl_core::accounts`
+   --> programs/aeterna/src/instructions/evolve.rs:111:29
+    |
+111 |         mpl_core::accounts::UpdateV1 {
+    |                             ^^^^^^^^ not found in `mpl_core::accounts`
+    |
+help: consider importing this struct
+    |
+1   + use mpl_core::instructions::UpdateV1;
+    |
+help: if you import `UpdateV1`, refer to it directly
+    |
+111 -         mpl_core::accounts::UpdateV1 {
+111 +         UpdateV1 {
+    |
+
+error[E0422]: cannot find struct, variant or union type `CreateV1` in module `mpl_core::accounts`
+  --> programs/aeterna/src/instructions/initialize_pass.rs:97:29
+   |
+97 |         mpl_core::accounts::CreateV1 {
+   |                             ^^^^^^^^ not found in `mpl_core::accounts`
+   |
+help: consider importing this struct
+   |
+1  + use mpl_core::instructions::CreateV1;
+   |
+help: if you import `CreateV1`, refer to it directly
+   |
+97 -         mpl_core::accounts::CreateV1 {
+97 +         CreateV1 {
+   |
+
+error[E0422]: cannot find struct, variant or union type `UpdateV1` in module `mpl_core::accounts`
+   --> programs/aeterna/src/instructions/complete_quest.rs:130:29
+    |
+130 |         mpl_core::accounts::UpdateV1 {
+    |                             ^^^^^^^^ not found in `mpl_core::accounts`
+    |
+help: consider importing this struct
+    |
+1   + use mpl_core::instructions::UpdateV1;
+    |
+help: if you import `UpdateV1`, refer to it directly
+    |
+130 -         mpl_core::accounts::UpdateV1 {
+130 +         UpdateV1 {
+    |
+
+warning: ambiguous glob re-exports
+  --> programs/aeterna/src/instructions/mod.rs:9:9
+   |
+9  | pub use evolve::*;
+   |         ^^^^^^^^^ the name `handler` in the value namespace is first re-exported here
+...
+15 | pub use grant_xp::*;
+   |         ----------- but the name `handler` in the value namespace is also re-exported here
+   |
+   = note: `#[warn(ambiguous_glob_reexports)]` on by default
+
+error[E0560]: struct `UpdateV1InstructionArgs` has no field named `new_plugins`
+   --> programs/aeterna/src/instructions/evolve.rs:123:13
+    |
+123 |             new_plugins: Some(vec![Plugin::Attributes(Attributes {
+    |             ^^^^^^^^^^^ `UpdateV1InstructionArgs` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0599]: no method named `get` found for struct `InitializePassBumps` in the current scope
+  --> programs/aeterna/src/instructions/initialize_pass.rs:73:34
+   |
+9  | #[derive(Accounts)]
+   |          -------- method `get` not found for this struct
+...
+73 |     soul_stats.bump = *ctx.bumps.get("soul_stats").unwrap();
+   |                        ----------^^^--------------
+   |                        |         |
+   |                        |         this is an associated function, not a method
+   |                        help: use associated function syntax instead: `InitializePassBumps::get("soul_stats")`
+   |
+   = note: found the following associated functions; to be used as methods, functions must have a `self` parameter
+note: the candidate is defined in the trait `anchor_lang::prelude::SolanaSysvar`
+  --> src/sysvar/mod.rs:214:5
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `get`, perhaps you need to implement one of them:
+           candidate #1: `SliceIndex`
+           candidate #2: `ZeroCopyAccessor`
+           candidate #3: `solana_program::account_info::Account`
+
+error[E0308]: mismatched types
+   --> programs/aeterna/src/instructions/initialize_pass.rs:111:27
+    |
+111 |             plugins: Some(plugins),
+    |                      ---- ^^^^^^^ expected `Vec<PluginAuthorityPair>`, found `Vec<Plugin>`
+    |                      |
+    |                      arguments to this enum variant are incorrect
+    |
+    = note: expected struct `Vec<PluginAuthorityPair>`
+               found struct `Vec<Plugin>`
+help: the type constructed contains `Vec<Plugin>` due to the type of the argument passed
+   --> programs/aeterna/src/instructions/initialize_pass.rs:111:22
+    |
+111 |             plugins: Some(plugins),
+    |                      ^^^^^-------^
+    |                           |
+    |                           this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /home/runner/work/platform-tools/platform-tools/out/rust/library/core/src/option.rs:577:5
+
+error[E0308]: mismatched types
+   --> programs/aeterna/src/instructions/initialize_pass.rs:112:25
+    |
+112 |             data_state: None,
+    |                         ^^^^ expected `DataState`, found `Option<_>`
+    |
+    = note: expected enum `DataState`
+               found enum `Option<_>`
+
+error[E0599]: no function or associated item named `try_deserialize` found for struct `BaseAssetV1` in the current scope
+  --> programs/aeterna/src/instructions/manage_pulse.rs:48:38
+   |
+48 |     let asset_account = BaseAssetV1::try_deserialize(&mut asset_data.as_ref())?;
+   |                                      ^^^^^^^^^^^^^^^ function or associated item not found in `BaseAssetV1`
+   |
+note: if you're trying to build a new `BaseAssetV1`, consider using `BaseAssetV1::from_bytes` which returns `std::result::Result<BaseAssetV1, std::io::Error>`
+  --> src/generated/accounts/base_asset_v1.rs:35:5
+
+error[E0599]: no method named `get` found for struct `ManagePulseBumps` in the current scope
+  --> programs/aeterna/src/instructions/manage_pulse.rs:55:34
+   |
+5  | #[derive(Accounts)]
+   |          -------- method `get` not found for this struct
+...
+55 |     pulse_link.bump = *ctx.bumps.get("pulse_link").unwrap();
+   |                        ----------^^^--------------
+   |                        |         |
+   |                        |         this is an associated function, not a method
+   |                        help: use associated function syntax instead: `ManagePulseBumps::get("pulse_link")`
+   |
+   = note: found the following associated functions; to be used as methods, functions must have a `self` parameter
+note: the candidate is defined in the trait `anchor_lang::prelude::SolanaSysvar`
+  --> src/sysvar/mod.rs:214:5
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `get`, perhaps you need to implement one of them:
+           candidate #1: `SliceIndex`
+           candidate #2: `ZeroCopyAccessor`
+           candidate #3: `solana_program::account_info::Account`
+
+error[E0599]: no method named `get` found for struct `CreateEventBumps` in the current scope
+  --> programs/aeterna/src/instructions/create_event.rs:27:29
+   |
+4  | #[derive(Accounts)]
+   |          -------- method `get` not found for this struct
+...
+27 |     event.bump = *ctx.bumps.get("event").unwrap();
+   |                   ----------^^^---------
+   |                   |         |
+   |                   |         this is an associated function, not a method
+   |                   help: use associated function syntax instead: `CreateEventBumps::get("event")`
+   |
+   = note: found the following associated functions; to be used as methods, functions must have a `self` parameter
+note: the candidate is defined in the trait `anchor_lang::prelude::SolanaSysvar`
+  --> src/sysvar/mod.rs:214:5
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `get`, perhaps you need to implement one of them:
+           candidate #1: `SliceIndex`
+           candidate #2: `ZeroCopyAccessor`
+           candidate #3: `solana_program::account_info::Account`
+
+error[E0599]: no method named `get` found for struct `CreateQuestBumps` in the current scope
+  --> programs/aeterna/src/instructions/create_quest.rs:35:29
+   |
+5  | #[derive(Accounts)]
+   |          -------- method `get` not found for this struct
+...
+35 |     quest.bump = *ctx.bumps.get("quest").unwrap();
+   |                   ----------^^^---------
+   |                   |         |
+   |                   |         this is an associated function, not a method
+   |                   help: use associated function syntax instead: `CreateQuestBumps::get("quest")`
+   |
+   = note: found the following associated functions; to be used as methods, functions must have a `self` parameter
+note: the candidate is defined in the trait `anchor_lang::prelude::SolanaSysvar`
+  --> src/sysvar/mod.rs:214:5
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `get`, perhaps you need to implement one of them:
+           candidate #1: `SliceIndex`
+           candidate #2: `ZeroCopyAccessor`
+           candidate #3: `solana_program::account_info::Account`
+
+error[E0599]: no method named `get` found for struct `CompleteQuestBumps` in the current scope
+   --> programs/aeterna/src/instructions/complete_quest.rs:110:41
+    |
+12  | #[derive(Accounts)]
+    |          -------- method `get` not found for this struct
+...
+110 |     completion_record.bump = *ctx.bumps.get("completion_record").unwrap();
+    |                               ----------^^^---------------------
+    |                               |         |
+    |                               |         this is an associated function, not a method
+    |                               help: use associated function syntax instead: `CompleteQuestBumps::get("completion_record")`
+    |
+    = note: found the following associated functions; to be used as methods, functions must have a `self` parameter
+note: the candidate is defined in the trait `anchor_lang::prelude::SolanaSysvar`
+   --> src/sysvar/mod.rs:214:5
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `get`, perhaps you need to implement one of them:
+            candidate #1: `SliceIndex`
+            candidate #2: `ZeroCopyAccessor`
+            candidate #3: `solana_program::account_info::Account`
+
+error[E0560]: struct `UpdateV1InstructionArgs` has no field named `new_plugins`
+   --> programs/aeterna/src/instructions/complete_quest.rs:142:13
+    |
+142 |             new_plugins: Some(vec![Plugin::Attributes(Attributes {
+    |             ^^^^^^^^^^^ `UpdateV1InstructionArgs` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0609]: no field `trading_volume` on type `&mut anchor_lang::prelude::Account<'_, SoulStats>`
+  --> programs/aeterna/src/instructions/grant_xp.rs:50:20
+   |
+50 |         soul_stats.trading_volume = soul_stats.trading_volume.saturating_add(vol);
+   |                    ^^^^^^^^^^^^^^ unknown field
+
+error[E0609]: no field `trading_volume` on type `&mut anchor_lang::prelude::Account<'_, SoulStats>`
+  --> programs/aeterna/src/instructions/grant_xp.rs:50:48
+   |
+50 |         soul_stats.trading_volume = soul_stats.trading_volume.saturating_add(vol);
+   |                                                ^^^^^^^^^^^^^^ unknown field
+
+error[E0609]: no field `trading_volume` on type `&mut anchor_lang::prelude::Account<'_, SoulStats>`
+  --> programs/aeterna/src/instructions/grant_xp.rs:51:66
+   |
+51 |         msg!("Trading Volume update: +{} -> {}", vol, soul_stats.trading_volume);
+   |                                                                  ^^^^^^^^^^^^^^ unknown field
+
+Some errors have detailed explanations: E0308, E0422, E0560, E0599, E0609.
+For more information about an error, try `rustc --explain E0308`.
+warning: `aeterna` (lib) generated 1 warning
+error: could not compile `aeterna` (lib) due to 16 previous errors; 1 warning emitted

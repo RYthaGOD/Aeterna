@@ -78,7 +78,7 @@ export class WalletManager {
             const accountKeys = message.staticAccountKeys;
 
             const ALLOWED_PROGRAMS = [
-                "AEtErna111111111111111111111111111111111111", // Aeterna Protocol
+                "E3aVLq7oT4BFPjHRXaZmYupDJ9EZTG8At8oafLKzPMBG", // Aeterna Protocol
                 "11111111111111111111111111111111",            // System Program
                 "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcQb", // Memo Program
                 "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", // Token Program

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { PublicKey } from "@solana/web3.js";
+import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import RebornEngine from "@/components/RebornEngine";
 import MirrorSoul from "@/components/MirrorSoul";
@@ -19,7 +18,14 @@ export default function Home() {
     if (connected) {
       await disconnect();
     } else {
-      await connect().catch(console.error);
+      await connect().catch((err) => {
+        // Silently catch the error when a user cancels the modal or hasn't selected a wallet
+        if (err.name === 'WalletNotSelectedError') {
+          console.log("Wallet connection cancelled by user.");
+        } else {
+          console.error("Connection failed:", err);
+        }
+      });
     }
   };
 
@@ -35,23 +41,25 @@ export default function Home() {
   };
 
   return (
-    <main className="relative w-full h-screen overflow-hidden">
-
+    <main className="relative w-screen h-screen overflow-hidden bg-black">
       {/* THE SPATIAL ENGINE (3D WORLD) */}
-      <RebornEngine>
-        <MirrorSoul mood={xp > 1500 ? "HAPPY" : xp > 500 ? "NEUTRAL" : "SLEEPY"} />
-      </RebornEngine>
+      <div className="absolute inset-0 z-0">
+        <RebornEngine>
+          <MirrorSoul mood={xp > 1500 ? "HAPPY" : xp > 500 ? "NEUTRAL" : "SLEEPY"} />
+        </RebornEngine>
+      </div>
 
       {/* THE CINEMATIC INTERFACE (HUD) */}
-      <CinematicHUD
-        wallet={wallet}
-        xp={xp}
-        wealthTier={wealthTier}
-        onConnect={handleConnect}
-        onScan={handleScan}
-        onSwap={handleSwap}
-      />
-
+      <div className="absolute inset-0 z-50 pointer-events-none">
+        <CinematicHUD
+          wallet={wallet}
+          xp={xp}
+          wealthTier={wealthTier}
+          onConnect={handleConnect}
+          onScan={handleScan}
+          onSwap={handleSwap}
+        />
+      </div>
     </main>
   );
 }

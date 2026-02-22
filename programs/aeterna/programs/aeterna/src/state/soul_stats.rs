@@ -13,13 +13,15 @@ pub struct SoulStats {
     /// Current evolution stage (0 = Dormant, 1 = Active, 2 = Ascended)
     /// Stored here so the program can enforce stage logic without reading Metaplex attributes
     pub current_stage: u8,
+    /// Total DeFi volume generated via Pulse swaps
+    pub trading_volume: u64,
     /// Canonical bump for this PDA
     pub bump: u8,
 }
 
 impl SoulStats {
-    /// 8 (discriminator) + 32 (asset) + 8 (xp) + 4 (quests_completed) + 1 (current_stage) + 1 (bump) = 54
-    pub const SIZE: usize = 8 + 32 + 8 + 4 + 1 + 1;
+    /// 8 (discriminator) + 32 (asset) + 8 (xp) + 4 (quests_completed) + 1 (current_stage) + 8 (trading_volume) + 1 (bump) = 62
+    pub const SIZE: usize = 8 + 32 + 8 + 4 + 1 + 8 + 1;
 
     /// XP required to reach ACTIVE state (stage 1)
     pub const THRESHOLD_ACTIVE: u64 = 100;

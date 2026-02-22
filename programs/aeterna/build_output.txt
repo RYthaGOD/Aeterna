@@ -1,0 +1,19 @@
+warning: virtual workspace defaulting to `resolver = "1"` despite one or more workspace members being on edition 2021 which implies `resolver = "2"`
+note: to keep the current resolver, specify `workspace.resolver = "1"` in the workspace root's manifest
+note: to use the edition 2021 resolver, specify `workspace.resolver = "2"` in the workspace root's manifest
+note: for more details see https://doc.rust-lang.org/cargo/reference/resolver.html#resolver-versions
+Error: Function _ZN112_$LT$solana_program..instruction..InstructionError$u20$as$u20$solana_frozen_abi..abi_example..AbiEnumVisitor$GT$13visit_for_abi17ha5800f82f06dae99E Stack offset of 4608 exceeded max offset of 4096 by 512 bytes, please minimize large stack variables
+   Compiling aeterna v0.1.0 (/mnt/d/AETERNA/programs/aeterna/programs/aeterna)
+warning: ambiguous glob re-exports
+  --> programs/aeterna/src/instructions/mod.rs:9:9
+   |
+9  | pub use evolve::*;
+   |         ^^^^^^^^^ the name `handler` in the value namespace is first re-exported here
+...
+15 | pub use grant_xp::*;
+   |         ----------- but the name `handler` in the value namespace is also re-exported here
+   |
+   = note: `#[warn(ambiguous_glob_reexports)]` on by default
+
+warning: `aeterna` (lib) generated 1 warning
+    Finished release [optimized] target(s) in 7.65s
