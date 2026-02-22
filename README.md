@@ -2,8 +2,8 @@
 
 ![AETERNA HERO](https://via.placeholder.com/1200x400.png?text=AETERNA+INDUSTRIAL+FUTURISM+ACTIVE)
 
-> [!NOTE]
-> **Status**: *High-fidelity "Industrial Futurism" cinematic renders are currently being processed. Placeholders are active until finalized.*
+> [!IMPORTANT]
+> **Status**: *AETERNA is officially deployed to the Solana Devnet. The Cinematic WebGL interface and Turnkey custodial infrastructure are fully synchronized and Launch Ready.*
 
 AETERNA is a state-of-the-art **Invisible Web3** ticketing and loyalty protocol. Built for high-end festivals and elite social circles, it eliminates the friction of blockchain while preserving the permanence and prestige of on-chain assets.
 
@@ -13,9 +13,9 @@ AETERNA merges the tactile utility of industrial infrastructure with the etherea
 
 ### Design Tokens
 
-- **Ghost Matter**: A physics-based material shader using R3F and GLSL for iridescent, semi-transparent textures.
-- **Neon Obsidian**: The core structural aesthetic—dark, reflective, and precision-engineered.
-- **Industrial Pulse**: Animated UI signals indicating secure on-chain synchronizations.
+- **Ghost Matter**: A physics-based material shader using `react-three-fiber` and GLSL for iridescent, semi-transparent textures.
+- **Neon Obsidian**: The core structural aesthetic—dark, reflective, and precision-engineered via Tailwind CSS v4.
+- **Cinematic HUD**: A full-bleed, hardware-accelerated interface array broadcasting live on-chain data.
 
 ---
 
@@ -27,7 +27,7 @@ AETERNA utilizes a 3-tier hybrid architecture to deliver a "Web2 speed, Web3 sec
 graph TD
     User[User] -->|Biometric Auth| Web[AETERNA Web App / R3F]
     Web -->|Unsigned Payload| Backend[Pulse Service / Turnkey]
-    Backend -->|Sign & Simulate| Solana[Solana Mainnet]
+    Backend -->|Sign & Simulate| Solana[Solana Devnet]
     
     subgraph "On-Chain Layer"
         Solana -->|CPI| Core[Metaplex Core Program]
@@ -56,10 +56,21 @@ We leverage **Turnkey** to create "Pulse Wallets"—invisible, non-custodial ses
 
 ### 3. Infinite Evolution (The Soul)
 
-User actions (spending USDC, scanning at events, participating in DeFi) trigger the `grant_xp` and `evolve_soul` instructions.
+User actions (spending USDC, scanning at events, participating in DeFi) trigger the `grant_xp` and `evolve` instructions.
 
 - **XP Engine**: Tracks activity on-chain through the `SoulStats` ledger.
 - **Metaplex Core Upgrades**: When XP thresholds are met, the backend authority triggers a metadata evolution using the MPL-Core `UpdateV1` instruction, physically changing the asset's appearance from "Dormant" to "Active" or "VIP".
+
+---
+
+## 🔗 Devnet Deployments
+
+The following programs are actively deployed on the Solana Devnet via Anchor:
+
+- **AETERNA Core Program:** `E3aVLq7oT4BFPjHRXaZmYupDJ9EZTG8At8oafLKzPMBG`
+- **World Program:** `E131o8Yy3ovXyW1sYqfSt31x3hX7YhTfX3YvYxXyW1s`
+
+> All Next.js and Node.js backend services are natively mapped to these program addresses.
 
 ---
 
@@ -67,7 +78,7 @@ User actions (spending USDC, scanning at events, participating in DeFi) trigger 
 
 ### Metaplex Core (MPL-Core v0.7.0)
 
-- **Plugin System**: Leveraged for efficient attribute management and state tracking.
+- **Plugin System**: Leveraged for efficient attribute management and state tracking without massive account reallocations.
 - **Low Compute**: Optimized for high-frequency festival interactions to minimize latency.
 
 ### Turnkey (Pulse Service)
@@ -78,7 +89,7 @@ User actions (spending USDC, scanning at events, participating in DeFi) trigger 
 ### React Three Fiber (Spatial Frontend)
 
 - **R3F + Cannon.js**: Physics-based interactions with digital assets.
-- **Dynamic HUD**: Cinematic overlays that react to on-chain XP gains and wealth-tier shifts.
+- **Dynamic HUD**: Cinematic overlays that react to on-chain XP gains and wealth-tier shifts, utilizing GSAP animations and Tailwind v4.
 
 ---
 
@@ -86,35 +97,32 @@ User actions (spending USDC, scanning at events, participating in DeFi) trigger 
 
 ### Prerequisites
 
-- **Anchor CLI**: `0.29.0`
+- **Anchor CLI**: `0.29.0` (or `0.30.0` for latest builds)
 - **Solana CLI**: `1.18.x`
 - **Node.js**: `v20.x`
-- **Keys**: Turnkey API Key & Organization ID.
+- **Keys**: Turnkey API Key & Organization ID (Not included in repo).
 
 ### Installation & Launch
 
 1. **Clone & Install**
 
    ```bash
-   git clone https://github.com/your-repo/aeterna.git
-   cd aeterna && npm install
+   git clone https://github.com/RYthaGOD/Aeterna.git
+   cd Aeterna
+   npm install --prefix apps/api
+   npm install --prefix frontend
    ```
 
-2. **Deploy Program**
+2. **Initialize Services**
 
    ```bash
-   cd programs/aeterna
-   anchor build && anchor deploy
-   ```
+   # Terminal 1: Pulse Service (Backend API)
+   cd apps/api 
+   npm run dev
 
-3. **Initialize Services**
-
-   ```bash
-   # Terminal 1: Pulse Service
-   cd pulse-service && npm run dev
-
-   # Terminal 2: Frontend
-   cd frontend && npm run dev
+   # Terminal 2: Spatial Frontend (Next.js)
+   cd frontend 
+   npm run dev
    ```
 
 ---
